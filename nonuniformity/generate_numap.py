@@ -4,7 +4,7 @@ from utils import config
 from utils import generate_numap
 import pickle
 
-def generate_nnonuniformity_map():
+def generate_nonuniformity_map():
     parser = argparse.ArgumentParser()
     parser.add_argument('--calibinfo_path', default = "../result/nonuniformity/ideal_nonuniformity_calibinfo.csv")
     parser.add_argument('--file_dir',default="/dybfs/users/xuhangkun/SimTAO/offline/change_data/nonuniformity/electron_1MeV")
@@ -26,4 +26,4 @@ def generate_nnonuniformity_map():
     file.close()
 
 if __name__ == "__main__":
-    generate_nnonuniformity_map()
+    generate_nonuniformity_map()
