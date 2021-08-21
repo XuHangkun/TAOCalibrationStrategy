@@ -11,12 +11,13 @@ from utils import config
 def draw_nonuniformity_map():
     parser = argparse.ArgumentParser()
     parser.add_argument('--input',default = config["idealmap_path"])
+    parser.add_argument('--kind',default = "linear",choices=["linear","cubic"])
     args = parser.parse_args()
     print(args)
 
     file = open(args.input,"rb")
     mapinfo = pickle.load(file)
-    tao_nu_map = TaoNuMap(mapinfo,kind="linear")
+    tao_nu_map = TaoNuMap(mapinfo,kind=args.kind)
 
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 
@@ -29,6 +30,7 @@ def draw_nonuniformity_map():
     # Plot the surface.
     surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
                            linewidth=0, antialiased=False)
+    ax.scatter(tao_nu_map.radius,tao_nu_map.theta,tao_nu_map.value)
 
     # Customize the z axis.
     ax.set_zlim(0.6, 1.05)

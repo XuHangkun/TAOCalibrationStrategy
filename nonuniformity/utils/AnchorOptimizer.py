@@ -10,6 +10,7 @@ import numpy as np
 from math import sqrt,sin,cos,acos
 from tqdm import trange
 import pandas as pd
+import copy
 
 def xyz2rthetaphi(x,y,z):
     """convert x,y,z to radiu,theta,phi
@@ -54,7 +55,8 @@ def create_numap_byidealline(
     radius_cut = 850
     info = {
         "radius":[],
-        "theta":[]
+        "theta":[],
+        "realistic":[]
     }
     # ACU points
     # center point
@@ -84,10 +86,7 @@ def create_numap_byidealline(
             theta = r_t_p[1]
             info["radius"].append(radius)
             info["theta"].append(theta)
-            if symmetry:
-                info["radius"].append(radius)
-                info["theta"].append(180 - theta)
-    
+
     ideal_calib_infos = []
     for i in range(len(info["radius"])):
         if info["radius"][i] > 850:
@@ -96,8 +95,17 @@ def create_numap_byidealline(
         item["r"] = info["radius"][i]
         item["theta"] = info["theta"][i]
         item["nu_value"] = ideal_map(item["r"],item["theta"])
+        item["realistic"] = True
         ideal_calib_infos.append(item)
-    
+        if symmetry:
+            if item["theta"] <= 0.1 or item["theta"] >= 179.9:
+                pass
+            else:
+                s_item = copy.deepcopy(item)
+                s_item["theta"] = 180 - s_item["theta"]
+                s_item["realistic"] = False
+                ideal_calib_infos.append(s_item)
+
     # make new nu map
     new_nu_map = TaoNuMap(ideal_calib_infos)
     return new_nu_map
@@ -109,7 +117,7 @@ class AnchorOptimizer:
     def __init__(self,ideal_map,
         symmetry=True,
         anchor_radius = 900,
-        max_radius=650,
+        max_radius=700,
         n_theta = 100,
         n_radius = 100
         ):
@@ -129,7 +137,7 @@ class AnchorOptimizer:
         )
         chi2 = self.mapdiffchi2(self.ideal_map,new_map)
         return chi2
-    
+
     def mapdiffchi2(self,first_map,second_map):
         """calculate difference between two map
         """
@@ -141,6 +149,10 @@ class AnchorOptimizer:
             radiu = (pow(i*delta_r3,1./3)+pow((i + 1) * delta_r3,1./3))/2
             for j in range(1,self.ntheta):
                 theta = 180*acos(1 - j*delta_cos)/3.1415926
+                if theta < 0.1:
+                    theta = 0.1
+                if theta > 179.9:
+                    theta = 179.9
                 radiuss.append(radiu)
                 thetas.append(theta)
         radiuss = np.array(radiuss)
@@ -149,11 +161,11 @@ class AnchorOptimizer:
         nu_value_2 = second_map(radiuss,thetas)
         chi2 = np.power(nu_value_1-nu_value_2,2)
         chi2 = np.mean(chi2)
-        return chi2
-    
+        return 1.e6*chi2
+
     def scan_anchor_params(self,
         par_name=["theta_1","theta_2","phi_2"],
-        par_lim=[(90,125),(130,170),(100,170)],
+        par_lim=[(90,125),(130,170),(151,152)],
         num = 10000):
         info = {"chi2":[]}
         for name in par_name:
