@@ -2,7 +2,7 @@ from math import sqrt,pow,asin,acos,atan,sin,cos,tan
 import numpy as np
 import pandas as pd
 import copy
-from .AnchorOptimizer import rthetaphi2xyz,xyz2rthetaphi
+from .tools import rthetaphi2xyz,xyz2rthetaphi
 
 def generate_idealpointcalib_info(
         ideal_map,

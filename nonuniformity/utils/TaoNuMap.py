@@ -8,6 +8,8 @@
 """
 from scipy import interpolate
 import copy
+from .tools import xyz2rthetaphi,rthetaphi2xyz
+from tqdm import tqdm
 
 class TaoNuMap:
     """ Nonuniformity map of Tao
@@ -49,3 +51,75 @@ class TaoNuMap:
         radius = copy.deepcopy(radius_in)
         thetas  = copy.deepcopy(thetas_in)
         return self.interp_map(radius,thetas)
+    
+    def reconstruct(self, events):
+        """reconstruct event
+
+        Args:
+            events is a list of event, every event should be a dict
+            eg. event = 
+            {   
+                "id":1, 
+                "nhit": 4500, 
+                "r": 300, 
+                "theta":32 , 
+                "phi": 32 , 
+                "source":"positron",
+                "edep":1.01
+            }
+        Return:
+            Add a key "corrected_nhit" in every event
+        """
+        items = []
+        for item in events:
+            n_item = copy.deepcopy(item)
+            n_item = self.reconstruct_event(n_item)
+            items.append(n_item)
+        return items
+    
+    def reconstruct_event(self, event):
+        event["corrected_nhit"] = event["nhit"] / self(event["r"],event["theta"])
+        return event
+
+
+class DataForReconstruct:
+
+    def __init__(self,data,source="positron"):
+        """
+        Args:
+            data : TaoData
+        """
+        self.data = data
+        self.source = source
+
+    def get_normal_data(self, radius_cut = 650):
+        self.data.SetBranchStatus(["*"],0)
+        self.data.SetBranchStatus(
+            ["fGdLSEdep","fGdLSEdepX","fGdLSEdepY","fGdLSEdepZ","fNSiPMHit","fPrimParticleKE"],1)
+        events = []
+        print("Read Data: %d samples. "%(self.data.GetEntries()))
+        for i in tqdm(range(self.data.GetEntries())):
+            self.data.GetEntry(i)
+            x = self.data.GetAttr("fGdLSEdepX")
+            y = self.data.GetAttr("fGdLSEdepY")
+            z = self.data.GetAttr("fGdLSEdepZ")
+            r,theta,phi = xyz2rthetaphi(x,y,z)
+            if r > radius_cut:
+                continue
+            edep = self.data.GetAttr("fGdLSEdep")
+            nhit = self.data.GetAttr("fNSiPMHit")
+            if edep < 1.e-5 and nhit < 1:
+                continue
+            prim_particle_ke = self.data.GetAttr("fPrimParticleKE")
+            item = {
+                "id":i,
+                "r":r,
+                "theta":theta,
+                "phi":phi,
+                "nhit":nhit,
+                "edep":edep,
+                "source":self.source,
+                "prim_particle_ke":sum(prim_particle_ke)
+            }
+            events.append(item)
+        return events

@@ -3,6 +3,10 @@ from math import sin,cos,acos,asin
 from utils import config
 
 def create_idealmap_info():
+    """create ideal map info
+
+    like calibration position, calibration source and so on
+    """
     info = {
         "idx":[],
         "r":[],
