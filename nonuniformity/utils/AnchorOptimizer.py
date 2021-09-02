@@ -142,7 +142,7 @@ class AnchorOptimizer:
 
     def scan_anchor_params(self,
         par_name=["theta_1","theta_2","phi_2"],
-        par_lim=[(90,125),(130,170),(151,152)],
+        par_lim=[(90,125),(130,170),(100,170)],
         num = 10000):
         info = {"chi2":[]}
         for name in par_name:

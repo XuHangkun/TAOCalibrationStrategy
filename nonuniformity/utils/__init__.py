@@ -3,4 +3,5 @@ from .deadsipm_list import generate_dead_sipm
 from .nonuniformitymap import generate_numap
 from .TaoNuMap import TaoNuMap,DataForReconstruct
 from .AnchorOptimizer import AnchorOptimizer,create_numap_byidealline
-from .generate_idealpointcalib_info import generate_idealpointcalib_info
+from .generate_pointcalib_info import generate_pointcalib_info
+from .tools import approx_equal

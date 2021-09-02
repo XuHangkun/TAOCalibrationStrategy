@@ -27,3 +27,9 @@ def rthetaphi2xyz(radius,theta,phi):
     y = radius * sin(theta) * sin(phi)
 
     return np.array([x,y,z])
+
+def approx_equal(x,y,eps=1.e-3):
+    if y*(1 + eps) > x and y*(1 - eps) < x:
+        return True
+    else:
+        return False

@@ -114,6 +114,8 @@ def generate_numap(
         sym_datas = []
         start_id = len(data_lists) + 1
         for oitem in data_lists:
+            if oitem["theta"] < 0.1 or oitem["theta"] > 179.9 or oitem["r"] < 0.1:
+                continue
             item = copy.deepcopy(oitem)
             item["realistic"] = False
             item["theta"] = 180 - item["theta"]
