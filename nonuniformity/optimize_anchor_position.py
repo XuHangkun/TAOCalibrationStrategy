@@ -61,3 +61,6 @@ print("Carefully best : ",value)
 optimize_info = pd.concat([optimize_info,care_optimize_info],axis=0)
 optimize_info.to_csv(args.optimize_chi2_info,index=None)
 best_anchor_info = {"rough_optim_param":value,"care_optim_param":care_value}
+f = open(args.best_anchor_position_file,"w")
+json.dump(best_anchor_info,f)
+f.close()

@@ -55,7 +55,7 @@ def generate_pointcalib_info(
     info["realistic"]    +=  [  True,  True,  True,  True,  True,  True,  True,
             True,  True,  True,  True,  True]
     info["calib_source"] += ["ge68" for i in range(12)]
-    
+
     info["r"] += [100,200,300,400,500,550,600,650,700,750,800,850]
     info["theta"] +=  [0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0]
     info["phi"] +=  [0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0  ,0]
@@ -106,7 +106,7 @@ def generate_pointcalib_info(
                 info["phi"].append(phi)
                 info["realistic"].append(False)
                 info["calib_source"].append("cs137")
-    
+
     # add file name and file_num here
     for i in range(len(info["calib_source"])):
         info["file_name"].append("%s_r%d_theta%d_phi%d"%(

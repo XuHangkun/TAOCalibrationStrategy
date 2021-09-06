@@ -48,7 +48,7 @@ def cal_full_hit(data,
 def generate_numap(
     calibration_data,
     file_dir,
-    symmetry = True,
+    symmetry = False,
     sipm_dead_mode = None
     ):
     """generate nonuniformity map
@@ -82,6 +82,13 @@ def generate_numap(
         for key in calibration_data.keys():
             item[key] = calibration_data[key][i]
 
+        if not item["realistic"] and item["r"] < 1:
+            item["mean_full_hit"] = reference_info["mean_full_hit"][reference_info["calib_source"].index(item["calib_source"])]
+            item["std_full_hit"] = 0
+            item["nu_value"] = 1.0
+            data_lists.append(item)
+            continue
+
         if item["file_num"] > 1:
             files = [
                 os.path.join(file_dir,item["file_name"]%(j)) for j in range(item["file_num"])
@@ -89,6 +96,7 @@ def generate_numap(
         else:
             files = [os.path.join(file_dir,item["file_name"])]
         exists_files = [e_file for e_file in files if os.path.exists(e_file)]
+        print("r %d theta %d file num %d"%(item["r"],item["theta"],len(exists_files)))
         data = TAOData(exists_files)
         full_hit_list = cal_full_hit(data,energy = item["energy"],sipm_dead_mode=sipm_dead_mode)
         # save the info
@@ -123,5 +131,5 @@ def generate_numap(
             start_id += 1
             sym_datas.append(item)
         data_lists += sym_datas
-    
+
     return data_lists
