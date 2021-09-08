@@ -25,10 +25,11 @@ class GammaNL:
         """
         self.e_dis_file = ROOT.TFile.Open(config["e_dis_file"])
         self.info = {}
-        self.get_e_dis()
+        self.initialize()
         self.fnonlin = ElectronNL()
 
-    def get_e_dis(self):
+    def initialize(self):
+        print("Initialize Gamma Non-linearity model :")
         ras_info = config["radioactive_source"]
         for key in ras_info.keys():
             self.info[key] = {}
@@ -42,7 +43,7 @@ class GammaNL:
             self.info[key]["e_dis_x"]=x[:end_bin]
             y = np.asarray(self.info[key]["e_dis"])[1:-1]
             self.info[key]["e_dis_y"]=y[:end_bin]
-            print(key,source_info["e_dis_name"],"End bin",end_bin,"Integral ",sum(y*x*binw))
+            print("\t",key,source_info["e_dis_name"],"End bin",end_bin,"Integral ",sum(y*x*binw))
             norm = 1.0/sum(y*x*binw)
             self.info[key]["norm"] = norm
 
