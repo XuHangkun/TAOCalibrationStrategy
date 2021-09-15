@@ -16,10 +16,13 @@ from TaoDataAPI import TAOData
 import os
 import numpy as np
 from tqdm import tqdm
+from collections import Counter
 
 def cal_full_hit(data,
     energy,
-    sipm_dead_mode = None):
+    sipm_dead_mode = None,
+    sipm_dead_seed = 7
+    ):
 
     data.SetBranchStatus(["*"],0)
     if not sipm_dead_mode:
@@ -27,7 +30,7 @@ def cal_full_hit(data,
         dead_list = []
     else:
         data.SetBranchStatus(["fGdLSEdep","fNSiPMHit","fSiPMHitID"],1)
-        dead_list = generate_dead_sipm(sipm_dead_mode)
+        dead_list = generate_dead_sipm(sipm_dead_mode,sipm_dead_seed)
 
     hit_list = []
     for i in range(data.GetEntries()):
@@ -39,9 +42,10 @@ def cal_full_hit(data,
         else:
             if sipm_dead_mode:
                 hit_ids = data.GetAttr("fSiPMHitID")
-                for d_sipm in hit_ids:
-                    if d_sipm in dead_list:
-                        hit -= 1
+                # minus dead sipm
+                hit_ids_counter = Counter(hit_ids)
+                for d_sipm in dead_list:
+                        hit -= hit_ids_counter[d_sipm]
             hit_list.append(hit)
     return hit_list
 
@@ -49,7 +53,8 @@ def generate_numap(
     calibration_data,
     file_dir,
     symmetry = False,
-    sipm_dead_mode = None
+    sipm_dead_mode = None,
+    sipm_dead_seed = 7
     ):
     """generate nonuniformity map
 
@@ -72,6 +77,7 @@ def generate_numap(
     data_len = len(calibration_data)
     calibration_data = calibration_data.to_dict()
     data_lists = []
+
     # calculate the calibration info
     reference_info = {
         "calib_source":[],
@@ -98,7 +104,11 @@ def generate_numap(
         exists_files = [e_file for e_file in files if os.path.exists(e_file)]
         print("r %d theta %d file num %d"%(item["r"],item["theta"],len(exists_files)))
         data = TAOData(exists_files)
-        full_hit_list = cal_full_hit(data,energy = item["energy"],sipm_dead_mode=sipm_dead_mode)
+        full_hit_list = cal_full_hit(
+                data,energy = item["energy"],
+                sipm_dead_mode=sipm_dead_mode,
+                sipm_dead_seed=sipm_dead_seed
+                )
         # save the info
         item["full_hit_list"] = full_hit_list
         item["realistic"] = True

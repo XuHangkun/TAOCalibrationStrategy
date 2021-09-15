@@ -2,7 +2,7 @@ from .config import config
 import numpy as np
 import pandas as pd
 
-def is_contained(theta,phi,sipm_dead_mode ="all"):
+def is_contained(theta,phi,sipm_dead_mode ="uni"):
     """
     Args:
         sipm_dead_mode  : position of sipm
@@ -13,7 +13,7 @@ def is_contained(theta,phi,sipm_dead_mode ="all"):
     Return :
         True or False
     """
-    if sipm_dead_mode  == "all":
+    if sipm_dead_mode  == "uni":
         return True
 
     if sipm_dead_mode  == "up":
@@ -31,13 +31,14 @@ def is_contained(theta,phi,sipm_dead_mode ="all"):
     else:
         return False
 
-def generate_dead_sipm(sipm_dead_mode ="all"):
+def generate_dead_sipm(sipm_dead_mode ="uni",seed=7):
     """generate the list of dead sipm id
 
     Args:
         sipm_dead_mode  : keep the dead sipm in one hemisphere
     """
-    np.random.seed(7)
+    print("Generate dead sipm list , dead mode : %s , dead seed : %d."%(sipm_dead_mode,seed))
+    np.random.seed(seed)
     sipm_pos_info = pd.read_csv(config["sipm_pos_file"])
     total_sipm = len(sipm_pos_info)
     dead_list = []

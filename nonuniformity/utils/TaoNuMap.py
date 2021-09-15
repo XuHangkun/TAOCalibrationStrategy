@@ -12,6 +12,8 @@ from .tools import xyz2rthetaphi,rthetaphi2xyz
 from tqdm import tqdm
 from math import acos
 import numpy as np
+from collections import Counter
+from .deadsipm_list import generate_dead_sipm
 
 class TaoNuMap:
     """ Nonuniformity map of Tao
@@ -94,10 +96,21 @@ class DataForReconstruct:
         self.data = data
         self.source = source
 
-    def get_normal_data(self, radius_cut = 650 , vertex_resolution = 0):
+    def get_normal_data(self,
+        radius_cut = 650 ,
+        vertex_resolution = 0,
+        sipm_dead_mode = None
+        ):
         self.data.SetBranchStatus(["*"],0)
-        self.data.SetBranchStatus(
-            ["fGdLSEdep","fGdLSEdepX","fGdLSEdepY","fGdLSEdepZ","fNSiPMHit","fPrimParticleKE"],1)
+        if not sipm_dead_mode:
+            self.data.SetBranchStatus(
+                ["fGdLSEdep","fGdLSEdepX","fGdLSEdepY","fGdLSEdepZ","fNSiPMHit","fPrimParticleKE"],1)
+            dead_list = []
+        else:
+            self.data.SetBranchStatus(
+                ["fGdLSEdep","fGdLSEdepX","fGdLSEdepY","fGdLSEdepZ","fNSiPMHit","fPrimParticleKE","fSiPMHitID"],1)
+            dead_list = generate_dead_sipm(sipm_dead_mode)
+
         events = []
         print("Read Data: %d samples. "%(self.data.GetEntries()))
         for i in tqdm(range(self.data.GetEntries())):
@@ -114,10 +127,18 @@ class DataForReconstruct:
             y += delta_y
             z += delta_z
             r,theta,phi = xyz2rthetaphi(x,y,z)
+            # only keep the events within fiducial volume
             if r > radius_cut:
                 continue
             edep = self.data.GetAttr("fGdLSEdep")
             nhit = self.data.GetAttr("fNSiPMHit")
+            # minus the dead sipm hit
+            if sipm_dead_mode:
+                hit_ids = self.data.GetAttr("fSiPMHitID")
+                # minus dead sipm
+                hit_ids_counter = Counter(hit_ids)
+                for d_sipm in dead_list:
+                    nhit -= hit_ids_counter[d_sipm]
             if edep < 1.e-5 and nhit < 1:
                 continue
             prim_particle_ke = self.data.GetAttr("fPrimParticleKE")

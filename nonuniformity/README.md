@@ -32,3 +32,13 @@ $ python draw/draw_numap_byanchor.py
 ```shell
 $ 
 ```
+
+## **Reconstruction**
+```shell
+$ # Reconstruct by ideal map
+$ python reconstruct_IBD.py
+$ # reconstruct by calib map
+$ python reconstruct_IBD.py --numap_path ../result/nonuniformity/point_calib_map.pkl --filter_points --output ../result/nonuniformity/IBD_reconstructed_by_calib_numap.pkl
+$ # reconstruct by calib map, consider vertex smear
+$ python reconstruct_IBD.py --numap_path ../result/nonuniformity/point_calib_map.pkl --filter_points --output ../result/nonuniformity/IBD_reconstructed_by_calib_numap_vertexsmear.pkl --vertex_smear 50
+```

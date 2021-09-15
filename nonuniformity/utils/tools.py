@@ -37,6 +37,11 @@ def approx_equal(x,y,eps=1.e-3):
         return False
 
 def gamma_fitable(r,theta):
+    """select gamma which can be fit
+
+    some gamma near two holes or boundary of acrylic container
+    can't be fitted
+    """
     if r > 750 and (theta < 8 or theta > (180 - 8)):
         return False
     else:

@@ -18,6 +18,7 @@ def reconstruct_IBD():
     parser.add_argument('--IBD_dir', default="/dybfs/users/xuhangkun/SimTAO/offline/change_data/nonuniformity/positron_uni")
     parser.add_argument('--numap_path',default = config["idealmap_path"])
     parser.add_argument('--interp_mode',default = "cubic")
+    parser.add_argument('--sipm_dead_mode',default=None)
     parser.add_argument('--filter_points',action="store_true")
     parser.add_argument('--vertex_smear',default=0,type=float)
     parser.add_argument('--output',default = "../result/nonuniformity/IBD_reconstructed_by_ideal_numap.pkl")
@@ -44,7 +45,7 @@ def reconstruct_IBD():
     datas = TAOData(paths)
     data_recons = DataForReconstruct(datas,"positron")
     events = data_recons.get_normal_data(radius_cut = 650,
-        vertex_resolution=args.vertex_smear)
+        vertex_resolution=args.vertex_smear,sipm_dead_mode = args.sipm_dead_mode)
 
     # reconstruct
     reconstructed_events = tao_nu_map.reconstruct(events)
