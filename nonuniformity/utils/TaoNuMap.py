@@ -99,17 +99,19 @@ class DataForReconstruct:
     def get_normal_data(self,
         radius_cut = 650 ,
         vertex_resolution = 0,
-        sipm_dead_mode = None
+        sipm_dead_mode = None,
+        sipm_dead_seed = 7
         ):
         self.data.SetBranchStatus(["*"],0)
         if not sipm_dead_mode:
             self.data.SetBranchStatus(
                 ["fGdLSEdep","fGdLSEdepX","fGdLSEdepY","fGdLSEdepZ","fNSiPMHit","fPrimParticleKE"],1)
             dead_list = []
+            adjs = []
         else:
             self.data.SetBranchStatus(
                 ["fGdLSEdep","fGdLSEdepX","fGdLSEdepY","fGdLSEdepZ","fNSiPMHit","fPrimParticleKE","fSiPMHitID"],1)
-            dead_list = generate_dead_sipm(sipm_dead_mode)
+            dead_list,adjs = generate_dead_sipm(sipm_dead_mode,sipm_dead_seed)
 
         events = []
         print("Read Data: %d samples. "%(self.data.GetEntries()))
@@ -137,8 +139,15 @@ class DataForReconstruct:
                 hit_ids = self.data.GetAttr("fSiPMHitID")
                 # minus dead sipm
                 hit_ids_counter = Counter(hit_ids)
-                for d_sipm in dead_list:
+                for d_sipm,d_adj in zip(dead_list,adjs):
                     nhit -= hit_ids_counter[d_sipm]
+
+                    # correct by adjacent readout channels
+                    adj_hits = []
+                    for j in d_adj:
+                        adj_hits.append(hit_ids_counter[j])
+                    adj_hit = np.mean(adj_hits)
+                    nhit += adj_hit
             if edep < 1.e-5 and nhit < 1:
                 continue
             prim_particle_ke = self.data.GetAttr("fPrimParticleKE")

@@ -28,9 +28,10 @@ def cal_full_hit(data,
     if not sipm_dead_mode:
         data.SetBranchStatus(["fGdLSEdep","fNSiPMHit"],1)
         dead_list = []
+        adjs = []
     else:
         data.SetBranchStatus(["fGdLSEdep","fNSiPMHit","fSiPMHitID"],1)
-        dead_list = generate_dead_sipm(sipm_dead_mode,sipm_dead_seed)
+        dead_list,adjs = generate_dead_sipm(sipm_dead_mode,sipm_dead_seed)
 
     hit_list = []
     for i in range(data.GetEntries()):
@@ -44,8 +45,15 @@ def cal_full_hit(data,
                 hit_ids = data.GetAttr("fSiPMHitID")
                 # minus dead sipm
                 hit_ids_counter = Counter(hit_ids)
-                for d_sipm in dead_list:
-                        hit -= hit_ids_counter[d_sipm]
+                for d_sipm,d_adj in zip(dead_list,adjs):
+                    nhit -= hit_ids_counter[d_sipm]
+
+                    # correct by adjacent readout channels
+                    adj_hits = []
+                    for j in d_adj:
+                        adj_hits.append(hit_ids_counter[j])
+                    adj_hit = np.mean(adj_hits)
+                    nhit += adj_hit
             hit_list.append(hit)
     return hit_list
 

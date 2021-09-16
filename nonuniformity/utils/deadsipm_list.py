@@ -1,6 +1,8 @@
 from .config import config
 import numpy as np
 import pandas as pd
+from .tools import rthetaphi2xyz
+from math import sin,sqrt
 
 def is_contained(theta,phi,sipm_dead_mode ="uni"):
     """
@@ -41,6 +43,8 @@ def generate_dead_sipm(sipm_dead_mode ="uni",seed=7):
     np.random.seed(seed)
     sipm_pos_info = pd.read_csv(config["sipm_pos_file"])
     total_sipm = len(sipm_pos_info)
+
+    # generate dead readout channels randomly
     dead_list = []
     while True:
         sipm_id = int(np.random.random()*total_sipm)
@@ -52,7 +56,36 @@ def generate_dead_sipm(sipm_dead_mode ="uni",seed=7):
             dead_list.append(sipm_id)
         if len(dead_list) >= round(total_sipm*config["dead_sipm_ratio"]):
             break
-    return dead_list
+
+    # get adjacent sipms
+    adjs = []
+    for item in dead_list:
+        adj_index = generate_adj_sipm(item,sipm_pos_info)
+        f_indexs = []
+        for j in adj_index:
+            if j not in dead_list:
+                f_indexs.append(j)
+        adjs.append(f_indexs)
+
+    return dead_list,adjs
+
+def generate_adj_sipm(sipm_index,pos_data):
+    pos = [930,pos_data["theta"][sipm_index],pos_data["phi"][sipm_index]]
+    sipm_num = len(pos_data)
+    adjs_index = []
+    for i in range(sipm_index - 500, sipm_index + 500):
+        if i < 0 or i >= sipm_num or i == sipm_index :
+            continue
+        theta = pos_data["theta"][i]
+        phi = pos_data["phi"][i]
+        if abs(theta - pos[1]) > 4:
+            continue
+        r_phi_len = abs(pos[0]*sin(pos[1]*3.1415926/180)*(pos[2] - phi)*3.1415926/180)
+        r_theta_len = abs(pos[0]*(pos[1] - theta)*3.1415926/180)
+        if sqrt(r_phi_len*r_phi_len + r_theta_len*r_theta_len) > 65:
+            continue
+        adjs_index.append(i)
+    return adjs_index
 
 def test():
     dead_list = generate_dead_sipm()
