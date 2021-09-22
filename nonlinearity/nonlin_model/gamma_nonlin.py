@@ -23,18 +23,19 @@ class GammaNL:
         args:
             e_dis_file : root file contain electron distribution
         """
-        self.e_dis_file = ROOT.TFile.Open(config["e_dis_file"])
         self.info = {}
         self.initialize()
         self.fnonlin = ElectronNL()
 
     def initialize(self):
         print("Initialize Gamma Non-linearity model :")
+        self.e_dis_file = ROOT.TFile.Open(config["e_dis_file"])
         ras_info = config["radioactive_source"]
         for key in ras_info.keys():
             self.info[key] = {}
             source_info = ras_info[key]
             self.info[key]["e_dis"] = self.e_dis_file.Get(source_info["e_dis_name"])
+            self.info[key]["e_dis"].SetDirectory(0)
             end_bin = self.info[key]["e_dis"].FindBin(source_info["energy"])
             binw = self.info[key]["e_dis"].GetBinWidth(1)
             self.info[key]["e_dis_binw"]=binw
@@ -46,6 +47,7 @@ class GammaNL:
             print("\t",key,source_info["e_dis_name"],"End bin",end_bin,"Integral ",sum(y*x*binw))
             norm = 1.0/sum(y*x*binw)
             self.info[key]["norm"] = norm
+        self.e_dis_file.Close()
 
     def __call__(self,key,p0,p1,p2):
         """calculate gamma non-linearity

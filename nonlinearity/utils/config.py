@@ -6,6 +6,7 @@ config = {
     "scint_nonlin_map_file":"./input/scint_nonlin_map.csv",
     "cherenkov_file":"./input/TAO_Cherenkov.csv",
     "e_dis_file":"./input/gamma_electron_tao.root",
+    "true_electron_nonlin_file":"./input/true_e_nonlin.pkl",
     "radioactive_source":{
         "Cs137":{
             "energy":0.662,

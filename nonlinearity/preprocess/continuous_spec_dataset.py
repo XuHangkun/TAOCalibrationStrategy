@@ -48,8 +48,17 @@ class ContinuousSpecDataset:
         """
         evis_spec.Reset()
         sys_err = 2*(np.random.random()-0.5)
-        for i in self.evis_hits["true_evis"]:
-            evis_spec.Fill((1 + self.residual_bias*sys_err/100)*i)
+        rand_index = np.arange(0,len(self.evis_hits["true_evis"]))
+        # np.random.shuffle(rand_index)
+        for i in rand_index:
+            evis = self.evis_hits["true_evis"][i]
+            evis_spec.Fill((1 + self.residual_bias*sys_err/100)*evis)
+        # consider the effect of statistic uncertainty
+        for i in range(1,evis_spec.GetNbinsX()+1):
+            content = evis_spec.GetBinContent(i)
+            content = content + 2*(np.random.random() - 0.5)*sqrt(content)
+            evis_spec.SetBinContent(i,1.0*content)
+        # correct the bin uncertainty
         evis_spec.Scale(1.0*self.num_of_events/evis_spec.Integral())
         for i in range(1,evis_spec.GetNbinsX()+1):
             content = evis_spec.GetBinContent(i)

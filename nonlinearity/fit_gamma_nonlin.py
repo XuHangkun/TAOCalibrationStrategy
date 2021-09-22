@@ -32,7 +32,7 @@ def fit_gamma_nonlin():
     parser = argparse.ArgumentParser(description='fit nonlinearity')
     parser.add_argument("--fit_mode", default="best",choices=["best","sigma_band"], help="fit model")
     parser.add_argument("--sys_err_times", default=100,type=int,help="time of do sys error change")
-    parser.add_argument("--output", default="../result/nonlinearity/fit/fit_pars.pkl",help="output file to save the parameters")
+    parser.add_argument("--output", default="../result/nonlinearity/fit/fit_gamma_best_pars.pkl",help="output file to save the parameters")
     args = parser.parse_args()
     print(args)
 
@@ -46,7 +46,7 @@ def fit_gamma_nonlin():
         values,errors = fit_a_nonlin(g_chi2)
         chi2 = g_chi2(*list(values))
         print("\tBest Pars",values,"\n\tChi2",chi2)
-        fit_parameters.append({"pars":list(values),"errors":list(errors),"chi2":chi2})
+        fit_parameters.append({"pars":list(values),"errors":list(errors),"chi2":chi2,"gamma_info":info})
     else:
         for i in range(args.sys_err_times):
             info = dataset.get_data(random_deviate = True)
@@ -56,7 +56,7 @@ def fit_gamma_nonlin():
             values,errors = fit_a_nonlin(g_chi2)
             chi2 = g_chi2(*list(values))
             print("\tBest Pars",values,"\n\tChi2",chi2)
-            fit_parameters.append({"pars":list(values),"errors":list(errors),"chi2":chi2})
+            fit_parameters.append({"pars":list(values),"errors":list(errors),"chi2":chi2,"gamma_info":info})
 
     save_pickle_data(fit_parameters,args.output)
     print("\tSave fit result to %s"%(args.output))
