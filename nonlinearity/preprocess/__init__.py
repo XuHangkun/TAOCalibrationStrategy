@@ -1,2 +1,3 @@
 from .gamma_dataset import GammaDataset
 from .continuous_spec_dataset import ContinuousSpecDataset
+from .continuous_spec_wn12_dataset import ContinuousSpecWN12Dataset

@@ -54,7 +54,8 @@ class GammaDataset:
         """
         sys_err_control={"shadowing":0,"fit":0,"pd_eff":0,"p_recoil":0}
         for key in sys_err_control.keys():
-            sys_err_control[key] = 2*(np.random.random()-0.5)
+            # sys_err_control[key] = 2*(np.random.random()-0.5)
+            sys_err_control[key] = np.random.normal()
         for key in info.keys():
             # fit bias
             info[key]["e_vis"] += sys_err_control["fit"]*self.ra_fit_info[key]["fit_bias"]*self.nake_true_info[key]["nake_evis"]/(self.scale*100)
