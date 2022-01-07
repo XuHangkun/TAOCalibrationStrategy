@@ -67,7 +67,7 @@ O16:
 nH:
   label: n-H
   activity: 0.2
-  fit_bias: 0.4
+  fit_bias: -0.12
   mean_gamma_e: 2.22
   nPE: 9861.846677367534
   n_gamma: 1
