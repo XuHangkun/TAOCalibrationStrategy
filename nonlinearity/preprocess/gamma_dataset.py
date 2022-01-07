@@ -10,22 +10,22 @@
 import pickle
 import numpy as np
 from math import pow,sqrt
-from utils import config,read_pickle_data
+from utils import read_pickle_data,read_yaml_data
 import copy
 
 class GammaDataset:
 
     def __init__(self,
-        ra_fit_info = "./input/ra_fit_info.pkl",
-        shadowing_info = "./input/shadowing_info.pkl",
-        nake_true_info = "./input/nake_true_info.pkl"
+        ra_fit_info = "./input/fit/ra_fit_info.yaml",
+        shadowing_info = "./input/fit/shadowing_info.yaml",
+        nake_true_info = "./input/fit/nake_true_info.yaml"
         ):
-        self.ra_fit_info = read_pickle_data(ra_fit_info)
-        self.shadowing_info = read_pickle_data(shadowing_info)
-        self.nake_true_info = read_pickle_data(nake_true_info)
+        self.ra_fit_info = read_yaml_data(ra_fit_info)
+        self.shadowing_info = read_yaml_data(shadowing_info)
+        self.nake_true_info = read_yaml_data(nake_true_info)
         self.O16_bias = 0.4 # [%]
         self.residual_bias = 0.3 # [%]
-        self.scale = self.nake_true_info["nH"]["nake_evis"]/config["radioactive_source"]["nH"]["energy"]
+        self.scale = self.nake_true_info["nH"]["nake_evis"]/self.nake_true_info["nH"]["mean_gamma_e"]
         self.info = {}
         self.initialize()
         print("Establish gamma dataset: \n\t%s\n\t%s\n\t%s"%(
@@ -33,8 +33,7 @@ class GammaDataset:
             ))
 
     def initialize(self):
-        ra_config = config["radioactive_source"]
-        for key in ra_config:
+        for key in self.nake_true_info.keys():
             error = sqrt(
                 pow(self.ra_fit_info[key]["fit_bias"]*self.nake_true_info[key]["nake_evis"]/100,2) +
                 pow(self.shadowing_info[key]["shadowing"]*self.nake_true_info[key]["nake_evis"]/100,2) +
@@ -54,7 +53,6 @@ class GammaDataset:
         """
         sys_err_control={"shadowing":0,"fit":0,"pd_eff":0,"p_recoil":0}
         for key in sys_err_control.keys():
-            # sys_err_control[key] = 2*(np.random.random()-0.5)
             sys_err_control[key] = np.random.normal()
         for key in info.keys():
             # fit bias
