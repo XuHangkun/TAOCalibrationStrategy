@@ -16,6 +16,11 @@ def fit_combinesource(
     # Read config file
     config_data = read_yaml_data(config_file)
 
+    # get energy scale
+    nake_true_info = "./input/fit/nake_true_info.yaml"
+    nake_true_info = read_yaml_data(nake_true_info)
+    energy_scale = nake_true_info["nH"]["nake_evis"]/nake_true_info["nH"]["mean_gamma_e"]
+
     # load data
     sources = ["Cs137","Mn54","K40","Co60"]
     energies = []
@@ -31,6 +36,7 @@ def fit_combinesource(
                 source = source,
                 files = files,
                 energy = source_info["total_gamma_e"],
+                energy_scale = energy_scale,
                 xrange = [0.1,3.0],
                 num = source_info["nonlin_calib_time"]*source_info["activity"],
                 nbin = 290
@@ -45,11 +51,12 @@ def fit_combinesource(
     # define TF1
     mcshape = MulSimpleMCShape(2)
     pars = [
-            3.446e5, 0.6130, 1.522e-2,2.685/344,
-            2.881e5, 0.786, 1.84e-2,4.60/288,
-            3.5e4, 1.4253, 3e-2,4.5/250,
-            2.159e4, 2.42, 3.8e-2,5.6/215
+            3.446e5, 0.6130 , 1.522e-2  ,  2.685e3,
+            2.881e5, 0.786  , 1.84e-2   ,  4.60e3,
+            3.5e4  , 1.4253 , 3e-2      ,  4.5e2,
+            2.159e4, 2.42   , 3.8e-2    ,  5.6e2
             ]
+
     pars_error = [0]*16
 
     # Fit Cs and Mn here
@@ -102,22 +109,26 @@ def fit_combinesource(
     x_b = h_x[(h_x >= fit_lim_b[0]) & (h_x < fit_lim_b[1])]
     total_y_b = [mcshape([x],pars[8:]) for x in x_b]
     fig = plt.figure()
-    colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
-    plt.step(h_x,h_y,linewidth=2,label = "Simulated data",where = "mid",color = colors[0])
-    plt.plot(x_a,total_y_a,label="Best fit",linewidth=2, color = colors[1])
-    plt.plot(x_b,total_y_b,linewidth=2, color = colors[1])
+    plt.errorbar(
+            h_x,h_y,np.sqrt(h_y),
+            linewidth=1,ms=2,fmt="o",
+            label = "Simulated data",color = "black")
+    plt.plot(x_a,total_y_a,
+            label="Best fit",linewidth=3, color = "red")
+    plt.plot(x_b,total_y_b,linewidth=3, color = "red")
+    colors = ["#1f77b4","#ff7f0e","#2ca02c","#9467bd"]
     for index in range(len(sources)):
         npar = pars[index*4:index*4+4]
         if index < 2:
-            y_a = [mcshape.source_leak_spec([x],npar) for x in x_a]
-            plt.plot(x_a, y_a, "--", linewidth=2,color = colors[index + 2])
+            # y_a = [mcshape.source_leak_spec([x],npar) for x in x_a]
+            # plt.plot(x_a, y_a, "--", linewidth=2,color = colors[index + 2])
             y_a = [mcshape.source_spec([x],npar) for x in x_a]
-            plt.plot(x_a, y_a,"--",label=labels[index], linewidth=2, color = colors[index+2])
+            plt.plot(x_a, y_a,linestyle = "--",label=labels[index], linewidth=2, color = colors[index])
         else:
-            y_b = [mcshape.source_leak_spec([x],npar) for x in x_b]
-            plt.plot(x_b, y_b,"--", linewidth=2, color = colors[index + 2])
+            # y_b = [mcshape.source_leak_spec([x],npar) for x in x_b]
+            # plt.plot(x_b, y_b,"--", linewidth=2, color = colors[index + 2])
             y_b = [mcshape.source_spec([x],npar) for x in x_b]
-            plt.plot(x_b, y_b,"--",label=labels[index], linewidth=2, color = colors[index + 2])
+            plt.plot(x_b, y_b,linestyle = "--",label=labels[index], linewidth=2, color = colors[index])
     plt.legend(fontsize=12,ncol=2)
     plt.yscale("log")
     plt.ylim(1.e2,1.e6)

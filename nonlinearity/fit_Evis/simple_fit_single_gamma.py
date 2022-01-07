@@ -17,6 +17,11 @@ def fit_single_gamma(
     # Read config file
     config_data = read_yaml_data(config_file)
 
+    # get energy scale
+    nake_true_info = "./input/fit/nake_true_info.yaml"
+    nake_true_info = read_yaml_data(nake_true_info)
+    energy_scale = nake_true_info["nH"]["nake_evis"]/nake_true_info["nH"]["mean_gamma_e"]
+
     # load data
     ra_info = config_data[name]
     files = [ra_info["file_path"]]
@@ -24,17 +29,18 @@ def fit_single_gamma(
             source = name,
             files = files,
             energy = ra_info["total_gamma_e"],
+            energy_scale = energy_scale,
             num = ra_info["nonlin_calib_time"]*ra_info["activity"]
             )
     # define TF1
     mcshape = SimpleMCShape()
     A = ROOT.TF1("tmp",mcshape,0,1.1*ra_info["total_gamma_e"],4)
-    A.SetNpx(500)
+    A.SetNpx(1500)
 
     # Fit
     if name == "Ge68":
-        fit_lim = (0.7,1.0)
-        A.SetParameters(2200,0.95,2.0,40)
+        fit_lim = (0.75,1.0)
+        A.SetParameters(2200,0.96,0.96*0.02,40)
     elif name == "O16":
         fit_lim = (5.6,6.8)
         A.SetParameters(220,6.5,6.5*0.01,5)
@@ -59,15 +65,22 @@ def fit_single_gamma(
     # plot fig
     h_x,h_y = rhist2np(h_hit)
     h_x_s = h_x[(h_x > fit_lim[0]) & (h_x < fit_lim[1])]
-    h_y = h_y[(h_x > fit_lim[0]*0.8) & (h_x < fit_lim[1]*1.1)]
-    h_x = h_x[(h_x > fit_lim[0]*0.8) & (h_x < fit_lim[1]*1.1)]
+    h_y = h_y[(h_x > fit_lim[0]*0.85) & (h_x < fit_lim[1]*1.1)]
+    h_x = h_x[(h_x > fit_lim[0]*0.85) & (h_x < fit_lim[1]*1.1)]
     eleak_y = [mcshape.leak_energy_spec([x],pars) for x in h_x_s]
+    full_y = [mcshape.gaus([x],pars) for x in h_x_s]
     total_y = [mcshape([x],pars) for x in h_x_s]
     fig = plt.figure()
-    plt.errorbar(h_x,h_y,np.sqrt(h_y),linewidth=1,ms=2,fmt="o",label="Simulated data")
-    plt.plot(h_x_s,total_y,label=f"Best fit: $\chi^{2}/Ndf$ = {chi2:.2f}/{ndf}")
-    plt.plot(h_x_s,eleak_y,"--",label="Energy leak")
-    plt.legend()
+    plt.errorbar(h_x,h_y,np.sqrt(h_y),linewidth=1,ms=2,fmt="o",label="Simulated data",color="black")
+    # plt.plot(h_x_s,total_y,label=f"Best fit: $\chi^{2}/Ndf$ = {chi2:.2f}/{ndf}")
+    plt.plot(h_x_s,total_y,label=f"Best fit",color="red")
+    plt.fill_between(h_x_s,full_y,[0]*len(h_x_s),
+            color = "none",hatch = "////",edgecolor = "#2ca02c",
+            label="Fully absorbed peak")
+    plt.fill_between(h_x_s,eleak_y,[0]*len(h_x_s),
+            color = "none",hatch = "\\\\\\\\",edgecolor = "#ff7f0e",
+            label="Energy loss tail")
+    plt.legend(fontsize=14)
     plt.xlabel("$E_{vis}$ [MeV]",fontsize=16)
     plt.ylabel("Count",fontsize=16)
     plt.yticks(fontsize=14)
@@ -81,5 +94,5 @@ def fit_single_gamma(
     return bias_info
 
 if __name__ == "__main__":
-    for source in ["Ge68","O16"]:
+    for source in ["Ge68"]:
         fit_single_gamma(source)

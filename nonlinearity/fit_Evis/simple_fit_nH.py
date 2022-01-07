@@ -16,6 +16,11 @@ def fit_nH(
         ):
     # Read config file
     config_data = read_yaml_data(config_file)
+
+    # get energy scale
+    nake_true_info = "./input/fit/nake_true_info.yaml"
+    nake_true_info = read_yaml_data(nake_true_info)
+    energy_scale = nake_true_info["nH"]["nake_evis"]/nake_true_info["nH"]["mean_gamma_e"]
     # load data
     ra_info = config_data[name]
     files = [ra_info["file_path"]]
@@ -23,6 +28,7 @@ def fit_nH(
             source = name,
             files = files,
             energy = 2.22569,             # n-H energy
+            energy_scale = energy_scale,
             num = 72000
             )
     # define TF1

@@ -1,9 +1,15 @@
 from TaoDataAPI import TAOData
-from .config import config
 import ROOT
 from tqdm import tqdm
 
-def read_gamma_hit(source,files,energy,num=50000,xrange=None,nbin=300):
+def read_gamma_hit(
+        source,
+        files,
+        energy,
+        energy_scale,
+        num=50000,
+        xrange=None,
+        nbin=300):
     """
     create generate energy spectrum
     pars:
@@ -17,6 +23,7 @@ def read_gamma_hit(source,files,energy,num=50000,xrange=None,nbin=300):
     xrange = xrange
     if not xrange:
         xrange = (0,float(1.2*energy))
+
     data = TAOData(files)
     data.SetBranchStatus(["*"],0)
     data.SetBranchStatus(["fPrimParticlePDG","fGdLSEdep","fNSiPMHit"],1)
@@ -34,9 +41,9 @@ def read_gamma_hit(source,files,energy,num=50000,xrange=None,nbin=300):
             gamma_count += 1
         hit_sum = data.GetAttr("fNSiPMHit")
         edep = data.GetAttr("fGdLSEdep")
-        hit_h.Fill(hit_sum/config["energy_scale"])
+        hit_h.Fill(hit_sum/energy_scale)
         if (edep > energy*0.9999) and (edep < energy*1.0001):
-            full_hit_h.Fill(hit_sum/config["energy_scale"])
+            full_hit_h.Fill(hit_sum/energy_scale)
         index += 1
         if gamma_count%300000 == 0:
             print("Read %d events."%(gamma_count))
