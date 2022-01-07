@@ -24,3 +24,26 @@ $ python fit_Evis/simple_fit_nH.py
 $ python fit_Evis/fit_nake_true.py
 ```
 - Write fitting biases to ./input/fit/nake_true_info.yaml
+
+## Fit the gamma data and B12 data
+### Input
+- ./input/fit/ra_fit_info.yaml : fitting bias
+- ./input/fit/shadowing_info.yaml : shadowing bias
+- ./input/fit/nake_true_info.yaml : nake true
+- ./input/fit/continue_spectrum_hits.pkl : hits of 12B
+- ./input/fit/continue_spectrum.root : edep spectrum of 12B
+- ./input/fit/true_electron_nonlin.pkl : true electron non-linearity
+
+### Fitting
+```shell
+$ # fit non-linearity with/without 12B data
+$ python fit_gamma_nonlin.py 
+$ python fit_total_nonlin.py
+```
+
+### Show
+```shell
+$ python draw/draw_b12_fitting.py 
+$ python draw/draw_gamma_fitting.py 
+$ python draw/draw_electron_nonlin.py 
+```
