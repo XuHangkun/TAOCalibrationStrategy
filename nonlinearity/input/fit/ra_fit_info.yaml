@@ -1,0 +1,77 @@
+Co60:
+  label: $^{60}$Co
+  activity: 10
+  fit_bias: -0.1715
+  mean_gamma_e: 1.252869
+  nPE: 10804.34658519607
+  n_gamma: 2
+  nonlin_calib_time: 36000
+  total_gamma_e: 2.505738
+  uncertainty: 0.0052
+  file_path: ../data/nonlinearity/enclosure_2weight/Co60.root
+Cs137:
+  label: $^{137}$Cs
+  activity: 50
+  fit_bias: -0.0869
+  mean_gamma_e: 0.6617
+  nPE: 2730.0326923087723
+  n_gamma: 1
+  nonlin_calib_time: 36000
+  total_gamma_e: 0.6617
+  uncertainty: 0.0032
+  file_path: ../data/nonlinearity/enclosure_2weight/Cs137.root
+Ge68:
+  label: $^{68}$Ge
+  activity: 500
+  fit_bias: -0.095
+  mean_gamma_e: 0.51099891
+  nPE: 4148.82307019321
+  n_gamma: 2
+  nonlin_calib_time: 100
+  total_gamma_e: 1.02199782
+  uncertainty: 0.0186
+  file_path: ../data/nonlinearity/enclosure_2weight/Ge68.root
+K40:
+  label: $^{40}$K
+  activity: 10
+  fit_bias: -0.0993
+  mean_gamma_e: 1.461
+  nPE: 6345.624029671923
+  n_gamma: 1
+  nonlin_calib_time: 36000
+  total_gamma_e: 1.461
+  uncertainty: 0.0062
+  file_path: ../data/nonlinearity/enclosure_2weight/K40.root
+Mn54:
+  label: $^{54}$Mn
+  activity: 50
+  fit_bias: -0.0413
+  mean_gamma_e: 0.835
+  nPE: 3499.308933755435
+  n_gamma: 1
+  nonlin_calib_time: 36000
+  total_gamma_e: 0.835
+  uncertainty: 0.003
+  file_path: ../data/nonlinearity/enclosure_2weight/Mn54.root
+O16:
+  label: $^{16}$O$^{*}$
+  activity: 0.16
+  fit_bias: -0.127
+  mean_gamma_e: 6.13
+  nPE: 28161.296271579915
+  n_gamma: 1
+  nonlin_calib_time: 36000
+  total_gamma_e: 6.13
+  uncertainty: 0.0384
+  file_path: ../data/nonlinearity/enclosure_2weight/AmC_Gamma.root
+nH:
+  label: n-H
+  activity: 0.2
+  fit_bias: 0.4
+  mean_gamma_e: 2.22
+  nPE: 9861.846677367534
+  n_gamma: 1
+  nonlin_calib_time: 36000
+  total_gamma_e: 2.22
+  uncertainty: 0.036
+  file_path: ../data/nonlinearity/enclosure_2weight/neutron.root

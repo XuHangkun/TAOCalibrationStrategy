@@ -1,0 +1,49 @@
+Co60:
+  mean_gamma_e: 1.252869
+  n_gamma: 2
+  nake_e_vis: 10811.121750187216
+  shadowing: -0.06058195317764141
+  total_gamma_e: 2.505738
+  uncertainty: 0.003594258803704539
+Cs137:
+  mean_gamma_e: 0.6617
+  n_gamma: 1
+  nake_e_vis: 2736.1004168336417
+  shadowing: -0.08441003330198969
+  total_gamma_e: 0.6617
+  uncertainty: 0.002603105534678197
+Ge68:
+  mean_gamma_e: 0.51099891
+  n_gamma: 2
+  nake_e_vis: 4151.776503759976
+  shadowing: -0.06392806722357647
+  total_gamma_e: 1.02199782
+  uncertainty: 0.008640504183386287
+K40:
+  mean_gamma_e: 1.461
+  n_gamma: 1
+  nake_e_vis: 6362.518112981448
+  shadowing: -0.07235415032893176
+  total_gamma_e: 1.461
+  uncertainty: 0.0048921722640767155
+Mn54:
+  mean_gamma_e: 0.835
+  n_gamma: 1
+  nake_e_vis: 3507.49061651784
+  shadowing: -0.08080116852755423
+  total_gamma_e: 0.835
+  uncertainty: 0.002447824918483486
+O16:
+  mean_gamma_e: 6.13
+  n_gamma: 1
+  nake_e_vis: 28249.274789625753
+  shadowing: -0.04743727179766017
+  total_gamma_e: 6.13
+  uncertainty: 0.02632584245580295
+nH:
+  mean_gamma_e: 2.22
+  n_gamma: 1
+  nake_e_vis: 9920.52988367951
+  shadowing: -0.0065581747696954445
+  total_gamma_e: 2.22
+  uncertainty: 0.029507730032475147

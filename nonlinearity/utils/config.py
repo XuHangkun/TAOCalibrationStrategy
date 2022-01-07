@@ -9,7 +9,7 @@ config = {
     "true_electron_nonlin_file":"./input/true_e_nonlin.pkl",
     "radioactive_source":{
         "Cs137":{
-            "energy":0.662,
+            "energy":0.6617,
             "label":"$^{137}Cs$",
             "gamma_num":1,
             "file_path":"/dybfs/users/xuhangkun/SimTAO/offline/change_data/neutron_design/2Weight_Enclosure_Ref_0.95/Cs137.root",
@@ -62,17 +62,17 @@ config = {
             "energy":2.22,
             "label":"n-H",
             "gamma_num":1,
-            "file_path":"",
+            "file_path":"/dybfs/users/xuhangkun/SimTAO/offline/change_data/neutron_design/2Weight_Enclosure_Ref_0.95/neutron.root",
             "file_num":1,
             "calib_time":36000,
-            "activity":2*0.1,
+            "activity":2,
             "e_dis_name":"hEnH"
             },
         "O16":{
             "energy":6.13,
             "label":"$^{16}O^{*}$",
             "gamma_num":1,
-            "file_path":"",
+            "file_path":"/dybfs/users/xuhangkun/SimTAO/offline/change_data/neutron_design/2Weight_Enclosure_Ref_0.95/AmC_Gamma.root",
             "file_num":1,
             "calib_time":36000,
             "activity":2*0.08,

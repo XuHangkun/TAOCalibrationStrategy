@@ -1,0 +1,70 @@
+Co60:
+  corrected_nake_evis: 10802.53187937024
+  corrected_nake_evis_e: 0.5651225366564403
+  file_path: ../data/nonlinearity/nake/Co60.root
+  mean_gamma_e: 1.253
+  n_gamma: 2
+  nake_evis: 10802.53187937024
+  nake_evis_e: 0.5651225366564403
+  rate: 10
+  total_gamma_e: 2.506
+Cs137:
+  corrected_nake_evis: 2732.594442704465
+  corrected_nake_evis_e: 0.21322236332828298
+  file_path: ../data/nonlinearity/nake/Cs137.root
+  mean_gamma_e: 0.6617
+  n_gamma: 1
+  nake_evis: 2732.594442704465
+  nake_evis_e: 0.21322236332828298
+  rate: 50
+  total_gamma_e: 0.6617
+Ge68:
+  corrected_nake_evis: 4148.949702039439
+  corrected_nake_evis_e: 0.25496325689707366
+  file_path: ../data/nonlinearity/nake/Ge68.root
+  mean_gamma_e: 0.51099891
+  n_gamma: 2
+  nake_evis: 4148.949702039439
+  nake_evis_e: 0.25496325689707366
+  rate: 2.77
+  total_gamma_e: 1.02199782
+K40:
+  corrected_nake_evis: 6351.7164998395265
+  corrected_nake_evis_e: 0.42860761423449223
+  file_path: ../data/nonlinearity/nake/K40.root
+  mean_gamma_e: 1.461
+  n_gamma: 1
+  nake_evis: 6351.7164998395265
+  nake_evis_e: 0.42860761423449223
+  rate: 10
+  total_gamma_e: 1.461
+Mn54:
+  corrected_nake_evis: 3502.3888788657173
+  corrected_nake_evis_e: 0.25752919512167777
+  file_path: ../data/nonlinearity/nake/Mn54.root
+  mean_gamma_e: 0.835
+  n_gamma: 1
+  nake_evis: 3502.3888788657173
+  nake_evis_e: 0.25752919512167777
+  rate: 50
+  total_gamma_e: 0.835
+O16:
+  corrected_nake_evis: 28177.59346907276
+  corrected_nake_evis_e: 1.454604999601442
+  file_path: ../data/nonlinearity/nake/AmC_Gamma.root
+  mean_gamma_e: 6.13
+  n_gamma: 1
+  nake_evis: 28177.59346907276
+  nake_evis_e: 1.454604999601442
+  rate: 0.16
+  total_gamma_e: 6.13
+nH:
+  corrected_nake_evis: 9868.136573247068
+  corrected_nake_evis_e: 0.6298407231684218
+  file_path: ../data/nonlinearity/nake/nH_Gamma.root
+  mean_gamma_e: 2.22
+  n_gamma: 1
+  nake_evis: 9868.136573247068
+  nake_evis_e: 0.6298407231684218
+  rate: 0.2
+  total_gamma_e: 2.22
