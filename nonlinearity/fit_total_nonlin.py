@@ -32,7 +32,8 @@ def fit_total_nonlin():
     parser = argparse.ArgumentParser(description='fit nonlinearity')
     parser.add_argument("--fit_mode", default="best",choices=["best","sigma_band"], help="fit model")
     parser.add_argument("--sys_err_times", default=30,type=int,help="time of do sys error change")
-    parser.add_argument("--output", default="../result/nonlinearity/fit/fit_total_best_pars.pkl",help="output file to save the parameters")
+    parser.add_argument("--output", default="../result/nonlinearity/fit/fit_total_best_pars.pkl",
+            help="output file to save the parameters")
     args = parser.parse_args()
     print(args)
 
