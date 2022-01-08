@@ -77,8 +77,9 @@ def draw_nonuniformity_map():
         ax.scatter(false_calib_point["r"],false_calib_point["theta"],label="Symmetry Point",
                 color="",marker='o',edgecolors='blue')
     ax.grid(False)
-    plt.plot([650,650],[0,180],linestyle="dotted",color="red",linewidth=5)
+    plt.plot([650,650],[0,180],linestyle="dashed",color="red",linewidth=3)
     cbar.ax.tick_params(labelsize=14)
+    cbar.ax.set_ylabel("$g_{\gamma}(r,\\theta) - g_{\\rm ideal}(r,\\theta)$",fontsize=16)
     ax.set_xlabel("R [mm]",fontsize=16)
     ax.set_ylabel("$\\theta [\circ]$",fontsize=16)
     plt.xticks(fontsize=14)

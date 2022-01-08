@@ -12,8 +12,8 @@ from utils import gamma_fitable
 def draw_nonuniformity_map():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input',default = config["idealmap_path"])
-    parser.add_argument('--kind',default = "linear",choices=["linear","cubic"])
+    parser.add_argument('--input',default = "../result/nonuniformity/point_calib_map.pkl")
+    parser.add_argument('--kind',default = "cubic",choices=["linear","cubic"])
     parser.add_argument('--calib_point',action="store_true")
     parser.add_argument('--output',default = "../result/nonuniformity/fig/ideal_nonuniformity_map.eps")
     args = parser.parse_args()
@@ -53,8 +53,8 @@ def draw_nonuniformity_map():
     true_calib_point = {"r":[],"theta":[],"value":[]}
     false_calib_point = {"r":[],"theta":[],"value":[]}
     for item in mapinfo:
-        #if not item["nu_value"]:
-        #    continue
+        # if not item["nu_value"]:
+        #     continue
         print(item["r"],item["theta"],item["realistic"],item["nu_value"])
         if not gamma_fitable(item["r"],item["theta"]):
             continue
@@ -70,14 +70,16 @@ def draw_nonuniformity_map():
         ax.scatter(true_calib_point["r"],true_calib_point["theta"],
                 label="Calib. Point",color="blue")
         ax.scatter(false_calib_point["r"],false_calib_point["theta"],label="Symmetry Point",
-                color="",marker='o',edgecolors='blue')
+                color="none",marker='o',edgecolors='blue')
 
     cbar.ax.tick_params(labelsize=14)
+    cbar.ax.set_ylabel("$g_{\gamma}(r,\\theta)$",fontsize=16)
     ax.set_xlabel("R [mm]",fontsize=16)
     ax.set_ylabel("$\\theta [\circ]$",fontsize=16)
     plt.xticks(fontsize=14)
     plt.yticks([0,30,60,90,120,150,180],fontsize=14)
-    plt.legend(frameon=False,fontsize=12)
+    plt.legend(frameon=False,fontsize=12,loc="center")
+    plt.plot([650,650],[0,180],linestyle="dashed",color="red",linewidth=3)
     plt.tight_layout()
     plt.xlim(0,np.max(true_calib_point["r"]))
     plt.ylim(0,180)
